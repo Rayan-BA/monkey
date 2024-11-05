@@ -7,18 +7,18 @@ import (
 type Lexer struct {
 	input        string
 	position     int  // index of current ch from input
-	readPosition int  // index of next ch from input
+	peekPosition int  // index of next ch from input
 	ch           byte // current ch from input
 }
 
 func (l *Lexer) readChar() {
-	if l.readPosition >= len(l.input) {
+	if l.peekPosition >= len(l.input) {
 		l.ch = 0
 	} else {
-		l.ch = l.input[l.readPosition]
+		l.ch = l.input[l.peekPosition]
 	}
-	l.position = l.readPosition
-	l.readPosition += 1
+	l.position = l.peekPosition
+	l.peekPosition += 1
 }
 
 func newToken(tokenType token.TokenType, ch string) token.Token {
@@ -56,10 +56,10 @@ func (l *Lexer) skipWhitespace() {
 }
 
 func (l *Lexer) peekChar() byte {
-	if l.readPosition >= len(l.input) {
+	if l.peekPosition >= len(l.input) {
 		return 0
 	} else {
-		return l.input[l.readPosition]
+		return l.input[l.peekPosition]
 	}
 }
 
@@ -130,7 +130,7 @@ func (l *Lexer) NextToken() token.Token {
 	return tok
 }
 
-func NewLexer(input string) *Lexer {
+func New(input string) *Lexer {
 	l := &Lexer{input: input}
 	l.readChar()
 	return l
